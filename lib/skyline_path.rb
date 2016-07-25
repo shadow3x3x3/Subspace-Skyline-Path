@@ -140,33 +140,4 @@ class SkylinePath < Graph
     raise ArgumentError, 'path must be Array' unless path.class == Array
     "p#{path.join('_')}".to_sym
   end
-
-
 end
-
-experiment = 'go'
-
-case experiment
-when 'salu'
-  EDGE_PATH = './salu-data/salu_edge_160203_450.txt'.freeze
-  NODE_PATH = './salu-data/salu_node_160203.txt'.freeze
-  DIM       = 7
-when 'test'
-  EDGE_PATH = './test-data/test-edge.txt'.freeze
-  NODE_PATH = './test-data/test-node.txt'.freeze
-  DIM       = 4
-when 'go'
-  EDGE_PATH = './go-data/4_goEdge.txt'.freeze
-  NODE_PATH = './go-data/node.txt'.freeze
-  DIM       = 4
-end
-
-test_edges = File.read(EDGE_PATH)
-test_nodes = File.read(NODE_PATH)
-
-sp = SkylinePath.new(dim: DIM, raw_edges: test_edges, raw_nodes: test_nodes)
-p sp.query_skyline_path(src_id: 0, dst_id: 987)
-# p sp.attrs_in([2590,971,973,1075,1077,1081,1082,1032,1357,1338,1337,1349,1071,934,933,964,963,938,937,978,977])
-# p sp.attrs_in([2590, 971, 973, 2588, 3130, 1582, 3114, 1066, 2394, 2238, 2388, 2385, 970, 1033, 1520, 2430, 1421, 1262, 814, 813, 982, 1424, 977])
-# p sp.attrs_in([2359, 2357, 1165])
-# p sp.attrs_in([0, 1, 2, 4, 5])
