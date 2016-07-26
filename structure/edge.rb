@@ -12,19 +12,19 @@ class Edge
   def set_subspace(postions)
     postion_check(postions)
 
-    subspace_attrs = []
-    postions.sort.each do |p|
-      subspace_attrs << @attrs[p]
-    end
-    @attrs = subspace_attrs
+    @attrs = find_attrs_in(postions)
   end
 
   def set_max_attrs(postions)
     postion_check(postions)
+
+    @max_attrs = find_attrs_in(postions)
   end
 
   def set_min_attrs(postions)
     postion_check(postions)
+
+    @min_attrs = find_attrs_in(postions)
   end
 
   def dist
@@ -41,5 +41,13 @@ class Edge
     if postions.max > @attrs.size - 1
       raise ArgumentError, "postions out of range (#{@attrs.size - 1})"
     end
+  end
+
+  def find_attrs_in(postions)
+    target_attrs = []
+    postions.sort.each do |p|
+      target_attrs << @attrs[p]
+    end
+    target_attrs
   end
 end
