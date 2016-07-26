@@ -44,7 +44,7 @@ class Array
   def aggregate_max(array)
     aggregate_array = []
     each_with_index do |attr, index|
-      aggregate_array << attr > array[index] ? attr : array[index]
+      aggregate_array << (attr > array[index] ? attr : array[index])
     end
     aggregate_array
   end
@@ -52,7 +52,7 @@ class Array
   def aggregate_min(array)
     aggregate_array = []
     each_with_index do |attr, index|
-      aggregate_array << attr < array[index] ? attr : array[index]
+      aggregate_array << (attr < array[index] ? attr : array[index])
     end
     aggregate_array
   end
