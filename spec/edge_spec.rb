@@ -40,6 +40,13 @@ describe Edge do
           expect(edge.attrs).to eq([1, 2, 3])
         end
       end
+
+      describe 'set [0, 2, 1]' do
+        it 'attrs should be [1, 2, 3]' do
+          edge.set_subspace([0, 2, 1])
+          expect(edge.attrs).to eq([1, 2, 3])
+        end
+      end
     end
   end
 end

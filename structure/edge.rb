@@ -19,7 +19,7 @@ class Edge
     end
 
     subspace_attrs = []
-    postions.each do |p|
+    postions.sort.each do |p|
       subspace_attrs << @attrs[p]
     end
     @attrs = subspace_attrs
