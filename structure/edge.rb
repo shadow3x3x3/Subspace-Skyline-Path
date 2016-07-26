@@ -12,8 +12,4 @@ class Edge
   def dist
     @attrs.first
   end
-
-  def min_value
-    @attrs.last
-  end
 end
