@@ -47,6 +47,18 @@ describe Edge do
           expect(edge.attrs).to eq([1, 2, 3])
         end
       end
+
+      describe 'set 9' do
+        it 'attrs should be raise ArgumentError' do
+          expect{ edge.set_subspace(9) }.to raise_error(ArgumentError)
+        end
+      end
+
+      describe 'set [0, 9]' do
+        it 'attrs should be raise ArgumentError' do
+          expect{ edge.set_subspace([0, 9]) }.to raise_error(ArgumentError)
+        end
+      end
     end
   end
 end
