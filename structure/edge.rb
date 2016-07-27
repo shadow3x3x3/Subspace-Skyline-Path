@@ -8,6 +8,8 @@ class Edge
     @dst        = attrs.shift.to_i
     @attrs      = attrs
     @norm_attrs = @attrs.clone
+    @max_attrs  = []
+    @min_attrs  = []
   end
 
   def set_subspace(postions)
@@ -16,7 +18,8 @@ class Edge
     end
     postion_check(postions)
 
-    @attrs = find_attrs_in(postions)
+    @attrs      = find_attrs_in(postions)
+    @norm_attrs = @attrs.clone
   end
 
   def set_max_attrs(postions)
