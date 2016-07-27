@@ -38,7 +38,7 @@ class SkylinePath < Graph
       sky_path(src_id, dst_id)
     end
 
-    puts "Found #{@skyline_path.size} Skyline paths"
+    # puts "Found #{@skyline_path.size} Skyline paths"
     @skyline_path
   end
 
@@ -84,16 +84,21 @@ class SkylinePath < Graph
     attr_full
   end
 
+  def attr_between(src, dst)
+    find_edge(src, dst).attrs
+  end
+
   private
 
-  def sky_path(cur, dst, pass = [])
+  def sky_path(cur, dst, pass = [], cur_attrs = Array.new(@dim, 0))
     pass << cur
     if cur == dst
-      pass = arrived(cur, pass, attrs_in(pass)) unless full_dominance?(attrs_in(pass))
+      pass = arrived(cur, pass, cur_attrs) unless full_dominance?(cur_attrs)
       return
     end
     find_neighbors(cur).each do |n|
-      sky_path(n, dst, pass) if next_hop?(n, pass)
+      next_path_attrs = cur_attrs.aggregate(attr_between(cur, n))
+      sky_path(n, dst, pass, next_path_attrs) if next_hop?(n, pass, next_path_attrs)
     end
     pass.delete(cur)
   end
@@ -118,8 +123,7 @@ class SkylinePath < Graph
     @skyline_path[path_to_sym(pass)] = attrs if new_skyline_flag
   end
 
-  def next_hop?(n, pass)
-    next_path_attrs = attrs_in(pass + [n])
+  def next_hop?(n, pass, next_path_attrs)
     unless @distance_limit.nil?
       return false if out_of_limit?(next_path_attrs.first)
     end
@@ -154,10 +158,6 @@ class SkylinePath < Graph
   def add_part_skyline(path, path_attrs)
     sym = "p#{path.first}_#{path.last}".to_sym
     @part_skyline_path[sym] = path_attrs
-  end
-
-  def attr_between(src, dst)
-    find_edge(src, dst).attrs
   end
 
   def query_check(src_id, dst_id)
