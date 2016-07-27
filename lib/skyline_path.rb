@@ -42,6 +42,34 @@ class SkylinePath < Graph
     @skyline_path
   end
 
+  def get_all_paths(params)
+    src = params[:src_id]
+    dst = params[:dst_id]
+    find_paths(src, dst)
+  end
+
+  def find_paths(src, dst)
+    path_recursive(src, dst, {}, [])
+  end
+
+  def path_recursive(cur, dst, paths, path)
+    path << cur
+    if cur == dst
+      path = get_dst(cur, paths, path)
+      return
+    end
+    find_neighbors(cur).each do |n|
+      path_recursive(n, dst, paths, path) unless path.include?(n)
+    end
+    path.delete(cur)
+    paths
+  end
+
+  def get_dst(cur, paths, path)
+    paths[path_to_sym(path)] = attrs_in(path)
+    path.delete(cur)
+  end
+
   protected
 
   def attrs_in(path)
