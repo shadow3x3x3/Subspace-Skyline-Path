@@ -17,11 +17,6 @@ class Graph
     @dim = @edges.first.attrs.size
   end
 
-  def get_all_paths(params)
-    params[:nodes] = @nodes
-    params[:edges] = @edges
-  end
-
   def add_node(node)
     @nodes << node unless @nodes.include?(node)
   end
