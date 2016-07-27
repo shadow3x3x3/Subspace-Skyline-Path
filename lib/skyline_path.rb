@@ -16,24 +16,33 @@ class SkylinePath < Graph
     @part_skyline_path = {}
   end
 
-  def query_skyline_path(src_id: nil, dst_id: nil, limit: nil)
+  def query_skyline_path(src_id: nil, dst_id: nil, limit: nil, evaluate: false)
     @distance_limit = limit
     query_check(src_id, dst_id)
-
-    Benchmark.benchmark(CAPTION, 22, FORMAT, 'total:') do |step|
-      t1 = step.report('Shorest path') do
-        shorest_path = shorest_path_query(src_id, dst_id)
-        @skyline_path[path_to_sym(shorest_path)] = attrs_in(shorest_path)
-        @shorest_distance = attrs_in(shorest_path).first
+    if evaluate
+      Benchmark.benchmark(CAPTION, 22, FORMAT, 'total:') do |step|
+        t1 = step.report('Shorest path') do
+          shorest_path = shorest_path_query(src_id, dst_id)
+          @skyline_path[path_to_sym(shorest_path)] = attrs_in(shorest_path)
+          @shorest_distance = attrs_in(shorest_path).first
+        end
+        t2 = step.report('SkyPath') do
+          sky_path(src_id, dst_id)
+        end
+        [t1 + t2]
       end
-      t2 = step.report('SkyPath') do
-        sky_path(src_id, dst_id)
-      end
-      [t1 + t2]
+    else
+      shorest_path = shorest_path_query(src_id, dst_id)
+      @skyline_path[path_to_sym(shorest_path)] = attrs_in(shorest_path)
+      @shorest_distance = attrs_in(shorest_path).first
+      sky_path(src_id, dst_id)
     end
+
     puts "Found #{@skyline_path.size} Skyline paths"
     @skyline_path
   end
+
+  protected
 
   def attrs_in(path)
     if path.size > 2
