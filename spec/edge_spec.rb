@@ -61,4 +61,32 @@ describe Edge do
       end
     end
   end
+
+  describe '#set_max_attrs' do
+    context 'in postions [0, 3]' do
+      it 'max_attrs should be [1, 4]' do
+        edge.set_max_attrs([0, 3])
+        expect(edge.max_attrs).to eq([1, 4])
+      end
+
+      it 'norm_attrs should be [2, 3]' do
+        edge.set_max_attrs([0, 3])
+        expect(edge.norm_attrs).to eq([2, 3])
+      end
+
+      describe 'and set min postions 2' do
+        it 'min_attrs should be [3]' do
+          edge.set_min_attrs(2)
+          expect(edge.min_attrs).to eq([3])
+        end
+
+        it 'norm_attrs should be [2]' do
+          edge.set_max_attrs([0, 3])
+          edge.set_min_attrs([2])
+          expect(edge.norm_attrs).to eq([2])
+        end
+      end
+    end
+  end
+
 end

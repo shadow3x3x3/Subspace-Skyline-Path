@@ -1,29 +1,35 @@
 # Record Edge
 class Edge
-  attr_reader :id, :src, :dst, :attrs, :max_attrs, :min_attrs
+  attr_reader :id, :src, :dst, :attrs, :max_attrs, :min_attrs, :norm_attrs
 
   def initialize(attrs)
-    @id    = attrs.shift.to_i
-    @src   = attrs.shift.to_i
-    @dst   = attrs.shift.to_i
-    @attrs = attrs
+    @id         = attrs.shift.to_i
+    @src        = attrs.shift.to_i
+    @dst        = attrs.shift.to_i
+    @attrs      = attrs
+    @norm_attrs = @attrs.clone
   end
 
   def set_subspace(postions)
+    unless postions.class == Array
+      raise ArgumentError, "postions should be an Array"
+    end
     postion_check(postions)
 
     @attrs = find_attrs_in(postions)
   end
 
   def set_max_attrs(postions)
+    postion_type_check(postions)
     postion_check(postions)
-
+    set_normal_attrs(postions)
     @max_attrs = find_attrs_in(postions)
   end
 
   def set_min_attrs(postions)
+    postion_type_check(postions)
     postion_check(postions)
-
+    set_normal_attrs(postions)
     @min_attrs = find_attrs_in(postions)
   end
 
@@ -34,20 +40,38 @@ class Edge
   private
 
   def postion_check(postions)
-    unless postions.class == Array
-      raise ArgumentError, "postions should be an Array"
-    end
-
-    if postions.max > @attrs.size - 1
+    if postions.class == Fixnum && postions > @attrs.size - 1
       raise ArgumentError, "postions out of range (#{@attrs.size - 1})"
+    elsif postions.class == Array && postions.max > @attrs.size - 1
+        raise ArgumentError, "postions out of range (#{@attrs.size - 1})"
+    end
+  end
+
+  def postion_type_check(postions)
+    unless postions.class == Array || postions.class == Fixnum
+      raise ArgumentError, "postions should be an Array or Fixnum"
     end
   end
 
   def find_attrs_in(postions)
-    target_attrs = []
-    postions.sort.each do |p|
-      target_attrs << @attrs[p]
+    if postions.class == Fixnum
+      return [@attrs[postions]]
+    else
+      target_attrs = []
+      postions.sort.each do |p|
+        target_attrs << @attrs[p]
+      end
     end
     target_attrs
+  end
+
+  def set_normal_attrs(postions)
+    if postions.class == Fixnum
+      @norm_attrs.delete(@attrs[postions])
+    else
+      postions.each do |p|
+        @norm_attrs.delete(@attrs[p])
+      end
+    end
   end
 end
