@@ -1,6 +1,6 @@
 # Record Edge
 class Edge
-  attr_accessor :id, :src, :dst, :attrs
+  attr_reader :id, :src, :dst, :attrs, :max_attrs, :min_attrs
 
   def initialize(attrs)
     @id    = attrs.shift.to_i
