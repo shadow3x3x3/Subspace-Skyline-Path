@@ -48,3 +48,8 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+# Data
+go-data/
+salu-data/
+main.rb
