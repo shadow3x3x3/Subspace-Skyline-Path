@@ -88,8 +88,6 @@ class SkylinePath < Graph
     find_edge(src, dst).attrs
   end
 
-  private
-
   def sky_path(cur, dst, pass = [], cur_attrs = Array.new(@dim, 0))
     pass << cur
     if cur == dst
@@ -122,6 +120,8 @@ class SkylinePath < Graph
 
     @skyline_path[path_to_sym(pass)] = attrs if new_skyline_flag
   end
+
+  private
 
   def next_hop?(n, pass, next_path_attrs)
     unless @distance_limit.nil?
