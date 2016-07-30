@@ -50,6 +50,7 @@ build-iPhoneSimulator/
 .rvmrc
 
 # Data
-go-data/
-salu-data/
+data/go-data
+data/salu-data
+data/NA-data
 main.rb
