@@ -128,9 +128,9 @@ class SkylinePath < Graph
       return false if out_of_limit?(next_path_attrs.first)
     end
     return false if pass.include?(n)
-    partial_result = partial_dominance?(pass + [n], next_path_attrs)
+    partial_result = partial_dominance?(n, next_path_attrs)
     return false if partial_result
-    add_part_skyline(pass + [n], next_path_attrs) unless partial_result.nil?
+    add_part_skyline(n, next_path_attrs)
     return false if full_dominance?(next_path_attrs)
     true
   end
@@ -139,11 +139,9 @@ class SkylinePath < Graph
     distance > @shorest_distance * @distance_limit ? true : false
   end
 
-  def partial_dominance?(path, path_attrs)
-    sym = "p#{path.first}_#{path.last}".to_sym
-    result = false
-    unless @part_skyline_path[sym].nil?
-      result = @part_skyline_path[sym].dominate?(path_attrs)
+  def partial_dominance?(target, path_attrs)
+    unless @part_skyline_path[target].nil?
+      result = @part_skyline_path[target].dominate?(path_attrs)
     end
     result
   end
@@ -155,9 +153,9 @@ class SkylinePath < Graph
     false # not be dominance
   end
 
-  def add_part_skyline(path, path_attrs)
-    sym = "p#{path.first}_#{path.last}".to_sym
-    @part_skyline_path[sym] = path_attrs
+  def add_part_skyline(target, path_attrs)
+    return unless @part_skyline_path[target].nil?
+    @part_skyline_path[target] = path_attrs
   end
 
   def query_check(src_id, dst_id)
