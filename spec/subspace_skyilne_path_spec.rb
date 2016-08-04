@@ -4,8 +4,8 @@ require_relative '../structure/util/read_util.rb'
 
 require_relative '../subspace_skyline_path.rb'
 
-EDGE_PATH = './test-data/test-edge.txt'.freeze
-NODE_PATH = './test-data/test-node.txt'.freeze
+EDGE_PATH = './data/test-data/test-edge.txt'.freeze
+NODE_PATH = './data/test-data/test-node.txt'.freeze
 
 test_edges = File.read(EDGE_PATH)
 test_nodes = File.read(NODE_PATH)
