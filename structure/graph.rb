@@ -14,7 +14,10 @@ class Graph
     @edges = []
     initialize_nodes(raw_nodes) unless raw_nodes.nil?
     initialize_edges(raw_edges) unless raw_edges.nil?
-    @dim = @edges.first.attrs.size
+    @dim = @edges.first.attrs.size unless @edges.empty?
+
+    @neighbors_hash = set_neighbors
+    @edges_hash     = set_edges_hash
   end
 
   def add_node(node)
@@ -24,6 +27,27 @@ class Graph
   def add_edge(edge)
     new_edge = edge.class == Edge ? edge : Edge.new(edge)
     @edges << new_edge unless duplicate_edge?(new_edge)
+  end
+
+  def find_neighbors_at(node)
+    @neighbors_hash[node]
+  end
+
+  def set_neighbors
+    n_hash = {}
+    nodes.each do |node|
+      n_hash[node] = find_neighbors(node)
+    end
+    n_hash
+  end
+
+  def set_edges_hash
+    e_hash = {}
+    @edges.each do |edge|
+      e_hash[[edge.src, edge.dst]] = edge
+      e_hash[[edge.dst, edge.src]] = edge
+    end
+    e_hash
   end
 
   def find_neighbors(node)

@@ -24,7 +24,7 @@ class SkylinePath < Graph
         t1 = step.report('Shorest path') do
           shorest_path = shorest_path_query(src_id, dst_id)
           @skyline_path[path_to_sym(shorest_path)] = attrs_in(shorest_path)
-          @shorest_distance = attrs_in(shorest_path).first
+          @shorest_distance = @skyline_path[path_to_sym(shorest_path)].first
         end
         t2 = step.report('SkyPath') do
           sky_path(src_id, dst_id)
@@ -33,6 +33,7 @@ class SkylinePath < Graph
       end
     else
       shorest_path = shorest_path_query(src_id, dst_id)
+      raise "Can't find any road between #{src_id} and #{dst_id}"  if shorest_path.nil?
       @skyline_path[path_to_sym(shorest_path)] = attrs_in(shorest_path)
       @shorest_distance = attrs_in(shorest_path).first
       sky_path(src_id, dst_id)
@@ -58,7 +59,7 @@ class SkylinePath < Graph
       path = get_dst(cur, paths, path)
       return
     end
-    find_neighbors(cur).each do |n|
+    find_neighbors_at(cur).each do |n|
       path_recursive(n, dst, paths, path) unless path.include?(n)
     end
     path.delete(cur)
@@ -85,7 +86,7 @@ class SkylinePath < Graph
   end
 
   def attr_between(src, dst)
-    find_edge(src, dst).attrs
+    @edges_hash[[src, dst]].attrs
   end
 
   def sky_path(cur, dst, pass = [], cur_attrs = Array.new(@dim, 0))
@@ -94,7 +95,7 @@ class SkylinePath < Graph
       pass = arrived(cur, pass, cur_attrs) unless full_dominance?(cur_attrs)
       return
     end
-    find_neighbors(cur).each do |n|
+    find_neighbors_at(cur).each do |n|
       next_path_attrs = cur_attrs.aggregate(attr_between(cur, n))
       sky_path(n, dst, pass, next_path_attrs) if next_hop?(n, pass, next_path_attrs)
     end
@@ -117,7 +118,6 @@ class SkylinePath < Graph
     end
 
     non_skyline.each { |key| @skyline_path.delete(key) }
-
     @skyline_path[path_to_sym(pass)] = attrs if new_skyline_flag
   end
 

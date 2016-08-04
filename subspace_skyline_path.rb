@@ -30,7 +30,7 @@ class SubspaceSkylinePath < SkylinePath
     if path.size > 2
       edges_of_path = partition(path)
       attr_full = edges_of_path.inject(Array.new(@dim, 0)) do |attrs, edges|
-        target_edge = find_edge(edges[0], edges[1])
+        target_edge = @edges_hash[[edges[0], edges[1]]]
         combine_aggregate(attrs, target_edge)
       end
     else
@@ -40,18 +40,18 @@ class SubspaceSkylinePath < SkylinePath
   end
 
   def attr_between(src, dst)
-    target_edge = find_edge(src, dst)
+    target_edge = @edges_hash[[src, dst]]
     target_edge.attrs + target_edge.min_attrs + target_edge.max_attrs
   end
 
   def sky_path(cur, dst, pass = [], cur_attrs = Array.new(@dim, 0))
     pass << cur
     if cur == dst
-      pass = arrived(cur, pass, cur_attrs) unless full_dominance?(cur_attrs)
+      pass = arrived(cur, pass, cur_attrs)
       return
     end
-    find_neighbors(cur).each do |n|
-      next_path_attrs = combine_aggregate(cur_attrs.clone, find_edge(cur, n))
+    find_neighbors_at(cur).each do |n|
+      next_path_attrs = combine_aggregate(cur_attrs.clone, @edges_hash[[cur, n]])
       sky_path(n, dst, pass, next_path_attrs) if next_hop?(n, pass, next_path_attrs)
     end
     pass.delete(cur)
@@ -76,5 +76,4 @@ class SubspaceSkylinePath < SkylinePath
       edges.each { |edge| edge.set_min_attrs(postions) }
     end
   end
-
 end
