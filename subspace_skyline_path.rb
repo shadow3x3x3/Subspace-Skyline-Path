@@ -1,4 +1,4 @@
-require_relative 'lib/skyline_path'
+require_relative 'src/skyline_path'
 
 
 class SubspaceSkylinePath < SkylinePath
